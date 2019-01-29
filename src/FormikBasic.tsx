@@ -5,17 +5,20 @@ import * as Yup from 'yup';
 import Debug from './FormikDebug';
 
 
+
 // data interface because this is Typescript
 interface IData {
     email: string,
     name: string,
-    phone: string
+    phone: string,
+    color: string
 }
 // data initialization
 const data = {
     email: "",
     name: "",
-    phone: ""
+    phone: "",
+    color: "blue"
 }
 
 
@@ -36,12 +39,18 @@ const dataSchema = Yup.object().shape(dataShape);
 // Formik arguments
 const formikArguments = {
     handleSubmit: ()=>{ console.log("I want emtpy")},
+    mapPropsToValues: () => ({ email: "",
+    name: "",
+    phone: "",
+    color: "blue"}),
     initialValue: data,
     validationSchema: dataSchema,
 }
 
 // View
-const View = (props: FormikProps<IData>) => (
+const View = (props: FormikProps<IData>) => {
+    
+    return (
     <>
     <form onSubmit={props.handleSubmit}>
         name:
@@ -70,12 +79,25 @@ const View = (props: FormikProps<IData>) => (
           value={props.values.phone}
           name="phone"
         />
+        <select 
+            name="color"
+            value={props.values.color} 
+            onChange={props.handleChange}
+            onBlur={props.handleBlur}
+            style={
+                {
+                    borderWidth: "2px", 
+                    borderColor: `${props.values.color}`
+                }}>
+            <option value="blue">blue</option>
+            <option value="red">red</option>
+        </select>
         
         {props.errors.phone && props.touched.phone && <div id="feedback" className="error">phone errors: {props.errors.phone}</div>}
     </form>
     <Debug />
     </>
-);
+)};
 
 
 // Connect with formik
